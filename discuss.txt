@@ -1,0 +1,22 @@
+
+generate_feature.py is the program to generate features for training graphs
+
+1) running code in file src/generate_feature.py
+2) you need python3.5, and all modules required in this file
+
+
+data in /data
+
+1) there are 1600 graphs totally; There are totally 4 families.
+   For each family, there are 200 graphs for normal graphs and 200 graphs for rewired graphs.
+
+2) in /data folder, there are /<family>_normal and /<family>_rewire folder, containing normal graph’s features and rewire graph’s features. in each folder, there are output.txt which contains all data of rest files; and there is also output_time.txt record for running time for each feature generation.
+
+
+3) for data, there are something need to be cautious: some features may be “ND”, meaning none defined, and some features are complex number (复数)，generally there are for eigenvalue-related features. You need to decide how to process it properly for machine learning.
+
+For more details, please check code of generate_feature.py where “try….except” block in some feature methods.
+
+My suggestion: features by “ND” and complex is not meaningful, you could exclude it, or mark it with very large number to differentiate other families.
+(These are just my suggestions)
+
