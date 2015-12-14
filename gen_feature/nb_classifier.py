@@ -2,8 +2,9 @@ import sklearn
 import sys
 import numpy as np
 from sklearn import svm
+from sklearn.naive_bayes import GaussianNB
 
-clf = svm.SVC(kernel = 'linear',C = 1.0)
+gnb = GaussianNB()
 
 def isFloat(value):
   try:
@@ -214,7 +215,6 @@ for s in t_samples:
         if maxs[i]+mins[i] != 0:
             s[i] = s[i]/(maxs[i]+mins[i])
 
-
 for l in range(len(samples)):
     print(labels[l],samples[l])
 
@@ -224,14 +224,14 @@ if len(labels) != len(samples):
     sys.exit(0)
 
 print("training...")
-clf.fit(samples, labels)
+gnb.fit(samples, labels)
 
 if len(t_correct_labels) != len(t_samples):
     print("invalid data, labels",len(t_correct_labels),"samples:",len(t_samples))
     sys.exit(0)
 
 print("predicting...")
-ret_labes = clf.predict(t_samples)
+ret_labes = gnb.predict(t_samples)
 
 suc = 0
 fail = 0
@@ -330,3 +330,4 @@ print("succed:",suc,"fail",fail,"rate:",suc/(fail+suc))
 # ret = clf.predict(testing)
 # print(ret)
 # print(testlabel)
+

@@ -920,7 +920,7 @@ def run_exp(nodes, type):
     phase = 1
     for nodes in paras:
         for rho in paras[nodes]:
-            if gen(type,nodes,rho,40,10) != 0:
+            if gen(type,nodes,rho,10,10) != 0:
                 print("error in generation process")
                 return -1
             print("done phase "+str(phase))
@@ -937,5 +937,5 @@ if __name__ == "__main__":
         if not type in ["pam","er","ddm","geo"]:
             print("error type")
         else:
-            for i in range(20):
-                run_exp(nodes+i*20, type)
+            for i in range(5):
+                run_exp(nodes+i*100, type)
