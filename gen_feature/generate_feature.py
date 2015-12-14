@@ -16,9 +16,11 @@ from matplotlib import pylab as pl
 import random
 import timeit
 import sys
+import os
 
 dir = ""
 type = ""
+
 # single feature vector generation class
 # note: not normalized.
 class GenerateFeatures:
@@ -61,7 +63,16 @@ class GenerateFeatures:
     # for experiment purpose
     # optional for writing files for label 3
     def write_single_vector(self):
-        label = 4
+        global type
+        if type == "ddm":
+            label = 4
+        elif type == "er":
+            label = 2
+        elif type == "geo":
+            label = 3
+        elif type == "pam":
+            label = 1
+        os.system("mkdir "+dir)
         with open(dir+"/output.txt", "a") as output:
                 output.write("%s\n" % label)
                 output.write("%s\n" % self.feature_vector)
@@ -788,7 +799,8 @@ class GenGraphs:
                     g.add_edge(u, v)
         return g
 
-def gen(type, nodes, rho, seed, rewire, need_rewire):
+def gen(type, nodes, rho, seed, rewire):
+    global dir
     g1 = GenGraphs(nodes, rho, seed, rewire)
 
     if type == "ddm":
@@ -805,20 +817,21 @@ def gen(type, nodes, rho, seed, rewire, need_rewire):
 
     print("graphs generation done")
 
-    if need_rewire:
-        generator = FeatureVectorsGenerator(g1.graphs_rewire, g1.labels)
-        print("feature generation done")
-        write_obj = WriteToFile(generator.feature_vectors, generator.labels)
-        write_obj.write_by_append(str(nodes)+"_"+str(rho)+"_"+str(seed)+"_"+str(rewire)+".txt")
-    else:
-        generator = FeatureVectorsGenerator(g1.graphs, g1.labels)
-        print("feature generation done")
-        write_obj = WriteToFile(generator.feature_vectors, generator.labels)
-        write_obj.write_by_append(str(nodes)+"_"+str(rho)+"_"+str(seed)+"_"+str(rewire)+".txt")
+    dir = type+"_rewire"
+    generator = FeatureVectorsGenerator(g1.graphs_rewire, g1.labels)
+    print("feature generation done")
+    write_obj = WriteToFile(generator.feature_vectors, generator.labels)
+    write_obj.write_by_append(str(nodes)+"_"+str(rho)+"_"+str(seed)+"_"+str(rewire)+".txt")
+
+    dir = type+"_normal"
+    generator = FeatureVectorsGenerator(g1.graphs, g1.labels)
+    print("feature generation done")
+    write_obj = WriteToFile(generator.feature_vectors, generator.labels)
+    write_obj.write_by_append(str(nodes)+"_"+str(rho)+"_"+str(seed)+"_"+str(rewire)+".txt")
 
     return 0
 
-def run_exp(type):
+def run_exp(nodes, type):
 
     # =======feature vector development======
     # g1 = GenerateGraph("PAM", 30, 10)
@@ -902,15 +915,12 @@ def run_exp(type):
     # t4.join()
 
 
-    paras = {500:[0.01,0.02,0.05],800:[0.01],900:[0.03],1100:[0.01],1200:[0.015],1000:[0.01,0.02],1500:[0.01,0.02]}
+    paras = {nodes:[0.01]}
     
     phase = 1
     for nodes in paras:
         for rho in paras[nodes]:
-            if gen(type,nodes,rho,20,10,True) != 0:
-                print("error in generation process")
-                return -1
-            if gen(type,nodes,rho,20,10,False) != 0:
+            if gen(type,nodes,rho,40,10) != 0:
                 print("error in generation process")
                 return -1
             print("done phase "+str(phase))
@@ -922,12 +932,10 @@ if __name__ == "__main__":
     if len (sys.argv) < 3:
         print ( "Usage: python generate_feature.py [pam|ddm|er|geo] [rewire|normal]")
     else:
-        type  = sys.argv[1]
-        rewire = sys.argv[2]
+        type  = sys.argv[2]
+        nodes  = int(sys.argv[1])
         if not type in ["pam","er","ddm","geo"]:
             print("error type")
-        elif not rewire in ["rewire","normal"]:
-            print("error rewire specification")
         else:
-            dir = type+"_"+rewire
-            run_exp(type)
+            for i in range(20):
+                run_exp(nodes+i*20, type)

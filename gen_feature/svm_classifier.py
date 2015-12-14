@@ -29,11 +29,10 @@ t_samples = []
 types = ["ddm","er","geo","pam"]
 
 train_test = "train"
-
 next = "label"
 
 for type in types:
-    f = open("data/"+type+"_normal/output.txt","r")
+    f = open(type+"_normal/output.txt","r")
     for line in f:
         if train_test == "train":
             if next == "label":
@@ -60,10 +59,11 @@ for type in types:
                         else:
                             print(elmt)
                             sys.exit(0)
-                    # related to nodes
+                    # samples.append(sample[:])
+		    # related to nodes
                     # samples.append([sample[0]/1000.0,sample[3],sample[4],sample[18],sample[19]])
                     # related to shape
-                    # samples.append([sample[12],sample[20]/sample[0],sample[21]/sample[0],sample[22]])
+                    samples.append([sample[12],sample[20]/sample[0],sample[21]/sample[0],sample[22]])
                     # samples.append([sample[0],sample[12],sample[20],sample[21],sample[22]])
             else:
                 print("error,invalid input data",line)
@@ -94,16 +94,93 @@ for type in types:
                         else:
                             print(elmt)
                             sys.exit(0)
-                    # related to nodes
+                    # t_samples.append(sample[:])
+		    # related to nodes
                     # t_samples.append([sample[0]/1000.0,sample[3],sample[4],sample[18],sample[19]])
                     # related to shape
-                    # t_samples.append([sample[12],sample[20]/sample[0],sample[21]/sample[0],sample[22]])
+                    t_samples.append([sample[12],sample[20]/sample[0],sample[21]/sample[0],sample[22]])
                     # t_samples.append([sample[0],sample[12],sample[20],sample[21],sample[22]])
             else:
                 print("error,invalid input data",line)
                 sys.exit(0)
 
+    f = open(type+"_rewire/output.txt","r")
+    for line in f:
+        if train_test == "train":
+            if next == "label":
+                next = "sample"
+                if len(line) <= 5:
+                    labels.append(line.rstrip())
+                else:
+                    print("label,invalid input data:",line)
+                    sys.exit(0)
+            elif next == "sample":
+                next = "label"
+                train_test = "test"
+                if len(line) <= 5:
+                    print("sample,invalid input data",line)
+                    sys.exit(0)
+                else:
+                    sample = []
+                    split_line = line.rstrip().replace(' ', '').replace('[', '').replace(']', '').replace("'ND'", "0").split(',')
+                    for elmt in split_line:
+                        if "j" in elmt:
+                            sample.append(complex(elmt).real)
+                        elif isNum(elmt):
+                            sample.append(float(elmt))
+                        else:
+                            print(elmt)
+                            sys.exit(0)
+                    # samples.append(sample[:])
+		    # related to nodes
+                    # samples.append([sample[0]/1000.0,sample[3],sample[4],sample[18],sample[19]])
+                    # related to shape
+                    samples.append([sample[12],sample[20]/sample[0],sample[21]/sample[0],sample[22]])
+                    # samples.append([sample[0],sample[12],sample[20],sample[21],sample[22]])
+            else:
+                print("error,invalid input data",line)
+                sys.exit(0)
+
+        elif train_test == "test":
+            if next == "label":
+                next = "sample"
+                if len(line) <= 5:
+                    t_correct_labels.append(line.rstrip())
+                else:
+                    print("label,invalid input data",line)
+                    sys.exit(0)
+            elif next == "sample":
+                next = "label"
+                train_test = "train"
+                if len(line) <= 5:
+                    print("sample,invalid input data",line)
+                    sys.exit(0)
+                else:
+                    sample = []
+                    split_line = line.rstrip().replace(' ', '').replace('[', '').replace(']', '').replace("'ND'", "0").split(',')
+                    for elmt in split_line:
+                        if "j" in elmt:
+                            sample.append(complex(elmt).real)
+                        elif isNum(elmt):
+                            sample.append(float(elmt))
+                        else:
+                            print(elmt)
+                            sys.exit(0)
+                    # t_samples.append(sample[:])
+		    # related to nodes
+                    # t_samples.append([sample[0]/1000.0,sample[3],sample[4],sample[18],sample[19]])
+                    # related to shape
+                    t_samples.append([sample[12],sample[20]/sample[0],sample[21]/sample[0],sample[22]])
+                    # t_samples.append([sample[0],sample[12],sample[20],sample[21],sample[22]])
+            else:
+                print("error,invalid input data",line)
+                sys.exit(0)
+
+for l in range(len(samples)):
+    print(labels[l],samples[l])
+
 if len(labels) != len(samples):
+    print(labels)
     print("invalid data, labels",len(labels),"samples:",len(samples))
     sys.exit(0)
 
