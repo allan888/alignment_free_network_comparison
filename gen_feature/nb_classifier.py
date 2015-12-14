@@ -33,6 +33,8 @@ types = ["ddm","er","geo","pam"]
 train_test = "train"
 next = "label"
 
+cols = [12,20,21,22]
+
 for type in types:
     f = open(type+"_normal/output.txt","r")
     for line in f:
@@ -63,10 +65,17 @@ for type in types:
                             sys.exit(0)
                     # samples.append(sample[:])
                     # related to nodes
-                    samples.append([sample[0],sample[3],sample[4],sample[18],sample[19]])
+                    #samples.append([sample[0],sample[3],sample[4],sample[18],sample[19]])
                     # related to shape
                     # samples.append([sample[12],sample[20]/sample[0],sample[21]/sample[0],sample[22]])
                     # samples.append([sample[0],sample[12],sample[20],sample[21],sample[22]])
+                    # related to path 
+                    #samples.append([sample[0],sample[5],sample[9],sample[26],sample[27]])
+                    f = []
+                    for col in cols:
+                        f.append(sample[col])
+                    samples.append(f[:])
+                    f = []
             else:
                 print("error,invalid input data",line)
                 sys.exit(0)
@@ -98,10 +107,15 @@ for type in types:
                             sys.exit(0)
                     #t_samples.append(sample[:])
                     # related to nodes
-                    t_samples.append([sample[0],sample[3],sample[4],sample[18],sample[19]])
+                    # t_samples.append([sample[0],sample[3],sample[4],sample[18],sample[19]])
                     # related to shape
                     # t_samples.append([sample[12],sample[20]/sample[0],sample[21]/sample[0],sample[22]])
                     # t_samples.append([sample[0],sample[12],sample[20],sample[21],sample[22]])
+                    f = []
+                    for col in cols:
+                        f.append(sample[col])
+                    t_samples.append(f[:])
+                    f = []
             else:
                 print("error,invalid input data",line)
                 sys.exit(0)
@@ -135,10 +149,15 @@ for type in types:
                             sys.exit(0)
                     # samples.append(sample[:])
                     # related to nodes
-                    samples.append([sample[0],sample[3],sample[4],sample[18],sample[19]])
+                    # samples.append([sample[0],sample[3],sample[4],sample[18],sample[19]])
                     # related to shape
                     # samples.append([sample[12],sample[20]/sample[0],sample[21]/sample[0],sample[22]])
                     # samples.append([sample[0],sample[12],sample[20],sample[21],sample[22]])
+                    f = []
+                    for col in cols:
+                        f.append(sample[col])
+                    samples.append(f[:])
+                    f = []
             else:
                 print("error,invalid input data",line)
                 sys.exit(0)
@@ -170,10 +189,15 @@ for type in types:
                             sys.exit(0)
                     # t_samples.append(sample[:])
                     # related to nodes
-                    t_samples.append([sample[0],sample[3],sample[4],sample[18],sample[19]])
+                    # t_samples.append([sample[0],sample[3],sample[4],sample[18],sample[19]])
                     # related to shape
                     # t_samples.append([sample[12],sample[20]/sample[0],sample[21]/sample[0],sample[22]])
                     # t_samples.append([sample[0],sample[12],sample[20],sample[21],sample[22]])
+                    f = []
+                    for col in cols:
+                        f.append(sample[col])
+                    t_samples.append(f[:])
+                    f = []
             else:
                 print("error,invalid input data",line)
                 sys.exit(0)
